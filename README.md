@@ -4,7 +4,8 @@
   <head>
   </head>
   <body>
-    <h1>Hi</h1>h1>
+    <h1>Hi</h1>
+    <h2>Hi</h2>
   </body>
 </html>
 
