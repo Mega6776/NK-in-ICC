@@ -1,9 +1,3 @@
-<style>
-  h1,h2,p,ul{
-    font-family: sans-serif; 
-  }
-</style>
-
 <p align="center">
   <img src="figs/header.png" alt="logo" width="400">
 </p>
