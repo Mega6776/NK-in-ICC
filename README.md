@@ -9,6 +9,7 @@
 <p>
   This repository contains supplemental resources for the research conducted by Katelyn Deng, Austin Yu, and Tony Zeng, which uses machine learning to identify key regulators of NK cell dysfunction in intrahepatic cholangiocarcinoma (ICC). 
 </p>
+
 <p>
 <h2>
   Contents:
@@ -34,4 +35,33 @@
   </li>
 </ul>
 
+<h2>
+  Contacts:
+</h2>
+<ul>
+  <li>
+    Katelyn Deng:
+    <ul>
+      <li>
+        Email: <a href="mailto:katelyndeng03@gmail.com">katelyndeng03@gmail.com</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    Austin Yu:
+    <ul>
+      <li>
+        Email: <a href="mailto:austinyu130@gmail.com">austinyu130@gmail.com</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    Tony Zeng:
+    <ul>
+      <li>
+        Email: <a href="mailto:zengtony08@gmail.com">zengtony08@gmail.com</a>
+      </li>
+    </ul>
+  </li>
+</ul>
 
