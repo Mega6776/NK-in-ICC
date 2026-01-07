@@ -4,7 +4,7 @@
   <head>
   </head>
   <body>
-    <h1>Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma</h1>
+    <h1 style="text-align: center;">Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma</h1>
     <h2>Hi</h2>
   </body>
 </html>
