@@ -10,7 +10,30 @@
   This repository contains supplemental resources for the research conducted by Katelyn Deng, Austin Yu, and Tony Zeng, which uses machine learning to identify key regulators of NK cell dysfunction in intrahepatic cholangiocarcinoma (ICC). 
 </p>
 
+<h2>
+  Abstract:
+</h2>
 <p>
+  Intrahepatic cholangiocarcinoma (ICC) is a rare but
+aggressive primary liver cancer with limited treatment options
+and poor outcomes. A defining feature of ICC is its immuno-suppressive tumor microenvironment (TME), where immune
+effector cells become functionally impaired. Although natural
+killer (NK) cells are present in high numbers, they often exhibit
+reduced cytotoxicity. The molecular mechanisms underlying this
+dysfunction remain obscure. In this study, we analyzed two
+ICC transcriptomic datasets from the Gene Expression Omnibus
+using CIBERSORTx to quantify resting and activated NK cell
+populations. We then applied machine learning approaches to
+identify genes that are associated with these NK cell functional
+states across both datasets. Genes were filtered through variance
+thresholding, ANOVA F-tests, recursive feature elimination, and
+elastic net regression, followed by repeated resampling to identify
+consistently enriched candidates. This work establishes an in
+silico approach for connecting gene-level expression patterns to
+immune cell dysfunction in solid tumors, and contributes to
+future studies aimed at restoring NK cell function in ICC.
+</p>
+  
 <h2>
   Contents:
 </h2>
