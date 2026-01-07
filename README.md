@@ -40,7 +40,7 @@ future studies aimed at restoring NK cell function in ICC.
 <ul>
   <li>
     <h3>Machine Learning</h3>
-    <p>Relevant sources used or implemented during the machine learning process</p>
+    <p>Relevant sources used or implemented during the machine learning process.</p>
     <ul>
       <li><strong>Code:</strong> Contains implementations of algorithms and other relevant source code</li>
       <li><strong>Datasets:</strong> Contain datasets used to train the machine learning model</li>
@@ -49,7 +49,7 @@ future studies aimed at restoring NK cell function in ICC.
 
   <li>
     <h3>Media</h3>
-    <p>Extra media (animations, images, diagrams) created to provide accesible visualizations for processes detailed in the research paper</p>
+    <p>Extra media (animations, images, diagrams) created to provide accesible visualizations for processes detailed in the research paper.</p>
     <ul>
       <li><strong>Animations:</strong> Animations of underlying biological processes relevant to the research</li>
       <li><strong>Images:</strong> Images related to the findings of the research</li>
