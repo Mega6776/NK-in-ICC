@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="figs/header.png" alt="logo" width="400">
+  [![Video Title](https://img.youtube.com)](https://www.youtube.com)
 </p>
 
 <h1 align="center">
