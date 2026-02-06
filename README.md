@@ -1,7 +1,7 @@
 <p align="center">
   [![Watch the video](https://img.youtube.com/vi/3wzJncYX0zc/0.jpg)](https://www.youtube.com/watch?v=3wzJncYX0zc)
 </p>
-
+[![Watch the video](https://img.youtube.com/vi/3wzJncYX0zc/0.jpg)](https://www.youtube.com/watch?v=3wzJncYX0zc)
 <h1 align="center">
   Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma
 </h1>
