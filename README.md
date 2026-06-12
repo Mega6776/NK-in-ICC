@@ -33,8 +33,7 @@ where immune effector cells become functionally impaired — most notably, natur
 NK cells are innate cytotoxic lymphocytes
 capable of recognizing and eliminating malignant cells in-
 dependently of antigen presentation. A previous study has
-reported that NK cells constitute a dominant immune pop-
-ulation within the ICC tumor microenvironment, occupying
+reported that NK cells constitute a dominant immune population within the ICC tumor microenvironment, occupying
 the largest immune compartment relative to other infiltrating
 immune cells. 
 The video below visually details the mechanics of NK cells and their role in tumor suppression-
