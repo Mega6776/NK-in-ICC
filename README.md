@@ -44,8 +44,7 @@ This phenomenon, characterized by decreased cytokine production, reduced degranu
 However, the molecular mechanisms underlying this
 dysfunction remain obscure. 
 
-The tumor microenvironment (TME) of intrahepatic cholan-
-giocarcinoma has been characterized as immunosuppressive,
+The tumor microenvironment (TME) of intrahepatic cholangiocarcinoma has been characterized as immunosuppressive,
 with a prominent amount of tumor-associated macrophages
 (TAMs), neutrophils, and regulatory T cells. Recent research
 has demonstrated that tumor-associated neutrophils (TANs)
