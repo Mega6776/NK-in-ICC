@@ -42,7 +42,9 @@ The video below visually details the mechanics of NK cells and their role in tum
 Despite this presence, NK cells have been observed to be functionally impaired or exhausted, suggesting suppression rather than absence. 
 This phenomenon, characterized by decreased cytokine production, reduced degranulation, and increased inhibitory markers, is largely driven by ICC's immunosuppressive tumor microenvironment (TME). 
 However, the molecular mechanisms underlying this
-dysfunction remain obscure. The tumor microenvironment (TME) of intrahepatic cholan-
+dysfunction remain obscure. 
+
+The tumor microenvironment (TME) of intrahepatic cholan-
 giocarcinoma has been characterized as immunosuppressive,
 with a prominent amount of tumor-associated macrophages
 (TAMs), neutrophils, and regulatory T cells. Recent research
