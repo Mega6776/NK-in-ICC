@@ -1,5 +1,3 @@
-[![Watch the video](https://img.youtube.com/vi/3wzJncYX0zc/0.jpg)](https://www.youtube.com/watch?v=3wzJncYX0zc)
-[![Watch the video](https://img.youtube.com/vi/WObT-3qav9M/0.jpg)](https://www.youtube.com/watch?v=WObT-3qav9M)
 <h1 align="center">
   Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma
 </h1>
@@ -17,13 +15,52 @@
   Abstract:
 </h2>
 <p>
-  Intrahepatic cholangiocarcinoma (ICC) is a rare but
-aggressive primary liver cancer with limited treatment options
-and poor outcomes. A defining feature of ICC is its immuno-suppressive tumor microenvironment (TME), where immune
-effector cells become functionally impaired. Although natural
-killer (NK) cells are present in high numbers, they often exhibit
-reduced cytotoxicity. The molecular mechanisms underlying this
-dysfunction remain obscure. In this study, we analyzed two
+  Intrahepatic cholangiocarcinoma (ICC) is a subtype of
+primary liver cancer that originates from the bile ducts in
+the liver, accounting for approximately 10% of all liver
+malignancies. Although less common than hepatocellular
+carcinoma (HCC), which accounts for 75–85% of primary
+liver cancer, ICC remains a significant clinical challenge
+due to its late diagnosis and aggressive progression. Currently,
+the only curative treatment option for patients is surgical
+resection; however, the prognosis is extremely poor, with a
+five-year survival rate of below 10%. The remaining treat-
+ment options are chemotherapy, radiation, and, most notably,
+emerging forms of immunotherapy.
+
+  A defining feature of ICC is its immunosuppressive microenvironment, 
+where immune effector cells become functionally impaired — most notably, natural killer (NK) cells.
+NK cells are innate cytotoxic lymphocytes
+capable of recognizing and eliminating malignant cells in-
+dependently of antigen presentation. A previous study has
+reported that NK cells constitute a dominant immune pop-
+ulation within the ICC tumor microenvironment, occupying
+the largest immune compartment relative to other infiltrating
+immune cells. 
+The video below visually details the mechanics of NK cells and their role in tumor suppression-
+
+[![Watch the video](https://img.youtube.com/vi/3wzJncYX0zc/0.jpg)](https://www.youtube.com/watch?v=3wzJncYX0zc)
+
+Despite this presence, NK cells have been observed to be functionally impaired or exhausted, suggesting suppression rather than absence. 
+This phenomenon, characterized by decreased cytokine production, reduced degranulation, and increased inhibitory markers, is largely driven by ICC's immunosuppressive tumor microenvironment (TME). 
+However, the molecular mechanisms underlying this
+dysfunction remain obscure. The tumor microenvironment (TME) of intrahepatic cholan-
+giocarcinoma has been characterized as immunosuppressive,
+with a prominent amount of tumor-associated macrophages
+(TAMs), neutrophils, and regulatory T cells. Recent research
+has demonstrated that tumor-associated neutrophils (TANs)
+and TAMs interact to accelerate ICC progression by acti-
+vating STAT3 signaling, therefore enhancing tumor invasion
+and metastasis. Meanwhile, ICC-associated M2-polarized
+TAMs can drive tumor growth and invasiveness through an
+IL-10/STAT3-dependent epithelial-to-mesenchymal transition
+(EMT). Elevated TAM infiltration has been shown to
+correlate with worse prognosis. The video below illustrates the key components of the ICC tumor microenvironment 
+and the intricate interactions that drive immune suppression-
+
+[![Watch the video](https://img.youtube.com/vi/WObT-3qav9M/0.jpg)](https://www.youtube.com/watch?v=WObT-3qav9M
+  
+  In this study, we analyzed two
 ICC transcriptomic datasets from the Gene Expression Omnibus
 using CIBERSORTx to quantify resting and activated NK cell
 populations. We then applied machine learning approaches to
