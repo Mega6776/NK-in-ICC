@@ -4,6 +4,8 @@
   Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma
 </h1>
 
+![Pipeline Overview](figs/pipeline.png)
+
 <p>
   This repository contains supplemental resources for the research paper: Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma.
 </p>
