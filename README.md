@@ -31,8 +31,7 @@ emerging forms of immunotherapy.
   A defining feature of ICC is its immunosuppressive microenvironment, 
 where immune effector cells become functionally impaired — most notably, natural killer (NK) cells.
 NK cells are innate cytotoxic lymphocytes
-capable of recognizing and eliminating malignant cells in-
-dependently of antigen presentation. A previous study has
+capable of recognizing and eliminating malignant cells independently of antigen presentation. A previous study has
 reported that NK cells constitute a dominant immune population within the ICC tumor microenvironment, occupying
 the largest immune compartment relative to other infiltrating
 immune cells. 
@@ -48,8 +47,7 @@ giocarcinoma has been characterized as immunosuppressive,
 with a prominent amount of tumor-associated macrophages
 (TAMs), neutrophils, and regulatory T cells. Recent research
 has demonstrated that tumor-associated neutrophils (TANs)
-and TAMs interact to accelerate ICC progression by acti-
-vating STAT3 signaling, therefore enhancing tumor invasion
+and TAMs interact to accelerate ICC progression by activating STAT3 signaling, therefore enhancing tumor invasion
 and metastasis. Meanwhile, ICC-associated M2-polarized
 TAMs can drive tumor growth and invasiveness through an
 IL-10/STAT3-dependent epithelial-to-mesenchymal transition
@@ -67,8 +65,7 @@ identify genes that are associated with these NK cell functional
 states across both datasets. Genes were filtered through variance
 thresholding, ANOVA F-tests, recursive feature elimination, and
 elastic net regression, followed by repeated resampling to identify
-consistently enriched candidates. This work establishes an in
-silico approach for connecting gene-level expression patterns to
+consistently enriched candidates. This work establishes an in-silico approach for connecting gene-level expression patterns to
 immune cell dysfunction in solid tumors, and contributes to
 future studies aimed at restoring NK cell function in ICC.
 </p>
