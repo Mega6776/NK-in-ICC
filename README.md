@@ -58,7 +58,7 @@ IL-10/STAT3-dependent epithelial-to-mesenchymal transition
 correlate with worse prognosis. The video below illustrates the key components of the ICC tumor microenvironment 
 and the intricate interactions that drive immune suppression-
 
-[![Watch the video](https://img.youtube.com/vi/WObT-3qav9M/0.jpg)](https://www.youtube.com/watch?v=WObT-3qav9M
+[![Watch the video](https://img.youtube.com/vi/WObT-3qav9M/0.jpg)](https://www.youtube.com/watch?v=WObT-3qav9M)
   
   In this study, we analyzed two
 ICC transcriptomic datasets from the Gene Expression Omnibus
