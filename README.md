@@ -139,5 +139,16 @@ future studies aimed at restoring NK cell function in ICC.
       </li>
     </ul>
   </li>
+
+  <h2>
+    Citation:
+  </h2>
+  @inproceedings{lastname2024shortname,
+  title     = {Your Full Paper Title},
+  author    = {Last, First and Other, Author},
+  booktitle = {Proceedings of NeurIPS 2024},
+  year      = {2024},
+  url       = {https://link-to-paper}
+  }
 </ul>
 
