@@ -42,9 +42,35 @@ The final classifier achieved strong predictive performance across both ICC tran
 
 ![Results](figs/results.png)
 
-Top genes positively associated with NK cell activation (NK-High): **IFIH1, HEATR3, SHC1, CSNK1E**
+### Top Genes Positively Correlated with Activated NK Cell Abundance
 
-Top genes negatively associated with NK cell activation (NK-Low): **MKRN2, C5orf22, CASKIN2, NDNL2**
+| Gene     | Count | Avg. Coefficient |
+|----------|-------|------------------|
+| SHC1     | 8     | 1.301            |
+| CSNK1E   | 8     | 1.249            |
+| ANKRD28  | 8     | 1.205            |
+| TMEM133  | 8     | 1.159            |
+| ACO2     | 8     | 1.002            |
+| IFIH1    | 7     | 1.336            |
+| HEATR3   | 7     | 1.315            |
+| STAMBP   | 6     | 1.249            |
+| AFTPH    | 6     | 1.056            |
+| PTBP1    | 5     | 0.951            |
+
+### Top Genes Positively Correlated with Resting NK Cell Abundance
+
+| Gene     | Count | Avg. Coefficient |
+|----------|-------|------------------|
+| NDNL2    | 8     | -1.010           |
+| CNBP     | 7     | -0.995           |
+| C5orf22  | 5     | -1.090           |
+| ZC3H7A   | 5     | -0.871           |
+| PPP2R5D  | 4     | -0.973           |
+| CYP20A1  | 4     | -0.886           |
+| ATG4A    | 2     | -0.935           |
+| MKRN2    | 2     | -1.120           |
+| GPBP1L1  | 2     | -0.888           |
+| CASKIN2  | 3     | -1.028           |
 
 ## Methodology
 
