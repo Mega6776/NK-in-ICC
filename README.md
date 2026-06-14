@@ -28,6 +28,18 @@ The TME of intrahepatic cholangiocarcinoma has been characterized as immunosuppr
 
 In this study, we analyzed two ICC transcriptomic datasets from the Gene Expression Omnibus using CIBERSORTx to quantify resting and activated NK cell populations. We then applied machine learning approaches to identify genes that are associated with these NK cell functional states across both datasets. Genes were filtered through variance thresholding, ANOVA F-tests, recursive feature elimination, and elastic net regression, followed by repeated resampling to identify consistently enriched candidates. This work establishes an in-silico approach for connecting gene-level expression patterns to immune cell dysfunction in solid tumors, and contributes to future studies aimed at restoring NK cell function in ICC.
 
+## Results
+
+## Methodology
+
+## Data
+
+Transcriptomic datasets were obtained from the [Gene Expression Omnibus (GEO)](https://www.ncbi.nlm.nih.gov/geo/):
+
+- [GSE107943]([https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE#####](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE107943))
+- [GSE32225]([https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE#####](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE32225))
+
+
 ## Repository Contents
 
 ### Machine Learning
