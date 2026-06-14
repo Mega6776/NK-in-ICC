@@ -30,7 +30,11 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 ## Results
 
-The final classifier achieved strong predictive performance across both ICC transcriptomic datasets:
+<table>
+<tr>
+<td>
+
+### Classifier Performance
 
 | Metric    | Score |
 |-----------|-------|
@@ -40,7 +44,18 @@ The final classifier achieved strong predictive performance across both ICC tran
 | Recall    | 0.85  |
 | F Score   | 0.85  |
 
+</td>
+<td>
+
 ![Results](figs/results.png)
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td>
 
 ### Top Genes Positively Correlated with Activated NK Cell Abundance
 
@@ -57,7 +72,10 @@ The final classifier achieved strong predictive performance across both ICC tran
 | AFTPH    | 6     | 1.056            |
 | PTBP1    | 5     | 0.951            |
 
-### Top Genes Positively Correlated with Resting NK Cell Abundance
+</td>
+<td>
+
+### Top Genes Correlated with Resting NK Cell Abundance
 
 | Gene     | Count | Avg. Coefficient |
 |----------|-------|------------------|
@@ -71,6 +89,10 @@ The final classifier achieved strong predictive performance across both ICC tran
 | MKRN2    | 2     | -1.120           |
 | GPBP1L1  | 2     | -0.888           |
 | CASKIN2  | 3     | -1.028           |
+
+</td>
+</tr>
+</table>
 
 ## Methodology
 
