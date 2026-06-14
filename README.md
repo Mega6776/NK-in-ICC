@@ -30,6 +30,22 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 ## Results
 
+The final classifier achieved strong predictive performance across both ICC transcriptomic datasets:
+
+| Metric    | Score |
+|-----------|-------|
+| ROC AUC   | 0.931 |
+| Accuracy  | 0.825 |
+| Precision | 0.85  |
+| Recall    | 0.85  |
+| F Score   | 0.85  |
+
+![Results](figs/results.png)
+
+Top genes positively associated with NK cell activation (NK-High): **IFIH1, HEATR3, SHC1, CSNK1E**
+
+Top genes negatively associated with NK cell activation (NK-Low): **MKRN2, C5orf22, CASKIN2, NDNL2**
+
 ## Methodology
 
 ## Data
