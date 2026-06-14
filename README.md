@@ -51,9 +51,6 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 </td>
 </tr>
-</table>
-
-<table>
 <tr>
 <td>
 
@@ -75,6 +72,13 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 </td>
 <td>
 
+![Activated NK](figs/activated_nk.png)
+
+</td>
+</tr>
+<tr>
+<td>
+
 ### Top Genes Correlated with Resting NK Cell Abundance
 
 | Gene     | Count | Avg. Coefficient |
@@ -89,6 +93,11 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 | MKRN2    | 2     | -1.120           |
 | GPBP1L1  | 2     | -0.888           |
 | CASKIN2  | 3     | -1.028           |
+
+</td>
+<td>
+
+![Resting NK](figs/resting_nk.png)
 
 </td>
 </tr>
