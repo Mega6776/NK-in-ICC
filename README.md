@@ -36,6 +36,8 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 ### Classifier Performance
 
+<br>
+
 | Metric    | Score |
 |-----------|-------|
 | ROC AUC   | 0.931 |
