@@ -96,6 +96,14 @@ future studies aimed at restoring NK cell function in ICC.
 </ul>
 
 <h2>
+  Dependencies:
+</h2>
+
+<h2>
+  Setup Instructions:
+</h2>
+
+<h2>
   Contacts:
 </h2>
 <ul>
