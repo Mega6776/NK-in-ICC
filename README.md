@@ -30,11 +30,8 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 ## Results
 
-<table>
 <tr>
-<td>
-
-<td valign="top">
+<td align="center" valign="top">
 
 ### Classifier Performance
 <br>
@@ -48,14 +45,10 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 | F Score   | 0.85  |
 
 </td>
-<td>
-
-![Results](figs/ROC.png)
-
+<td align="center" valign="top">
+<img src="figs/ROC.png" width="300"/>
 </td>
 </tr>
-<tr>
-<td>
 
 ### Top Genes Positively Correlated with Activated NK Cell Abundance
 
