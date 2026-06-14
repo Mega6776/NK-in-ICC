@@ -47,7 +47,7 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 </td>
 <td>
 
-![Results](figs/results.png)
+![Results](figs/ROC.png)
 
 </td>
 </tr>
@@ -72,7 +72,7 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 </td>
 <td>
 
-![Activated NK](figs/activated_nk.png)
+![Activated NK](figs/NKHighChart.png)
 
 </td>
 </tr>
@@ -97,7 +97,7 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 </td>
 <td>
 
-![Resting NK](figs/resting_nk.png)
+![Resting NK](figs/NKLowChart.png)
 
 </td>
 </tr>
