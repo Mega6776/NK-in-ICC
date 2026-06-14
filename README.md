@@ -51,11 +51,10 @@ Extra media (animations, images, diagrams) created to provide accessible visuali
 ## Citation
 
 ```bibtex
-@inproceedings{lastname2024shortname,
-  title     = {Your Full Paper Title},
-  author    = {Last, First and Other, Author},
-  booktitle = {Proceedings of NeurIPS 2024},
-  year      = {2024},
-  url       = {https://link-to-paper}
+@inproceedings{deng2025nkcell,
+  title  = {Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma},
+  author = {Deng, Katelyn and Yu, Austin and Zeng, Tony and Zong, Ziliang},
+  year   = {2025},
+  url    = {https://link-to-your-paper}
 }
 ```
