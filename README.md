@@ -32,11 +32,9 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 <table>
 <tr>
-<td>
+<td valign="top">
 
 ### Classifier Performance
-
-<br>
 
 | Metric    | Score |
 |-----------|-------|
