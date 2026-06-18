@@ -1,4 +1,4 @@
-# Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma
+<h1 align="center">Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma</h1>
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Python](https://img.shields.io/badge/python-3.9+-blue)
