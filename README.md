@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/python-3.9+-blue)
 ![Status](https://img.shields.io/badge/status-research-orange)
 
-![Pipeline Overview](figs/pipeline.png)
+![Pipeline Overview](media/figs/pipeline.png)
 
 This repository contains supplemental resources for the research paper: Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma.
 
@@ -47,7 +47,7 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 </td>
 <td>
 
-![Results](figs/ROC.png)
+![Results](media/figs/ROC.png)
 
 </td>
 </tr>
@@ -71,7 +71,7 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 </td>
 <td>
-<img src="figs/NKHighChart.png" width="500"/>
+<img src="media/figs/NKHighChart.png" width="500"/>
 </td>
 </tr>
 <tr>
@@ -94,7 +94,7 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 </td>
 <td>
-<img src="figs/NKLowChart.png" width="500"/>
+<img src="media/figs/NKLowChart.png" width="500"/>
 </td>
 </tr>
 </table>
