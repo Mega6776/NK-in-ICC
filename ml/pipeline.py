@@ -120,7 +120,7 @@ def load_expression_matrix():
 def load_nk_labels():
     counts_frame = pd.read_excel(DATA_DIR / CIBERSORT_FILE, header=0)
     if "Mixture" not in counts_frame.columns:
-        raise KeyError("Expected a 'Mixture' column in cibersort.xlsx containing sample IDs.")
+        raise KeyError("Expected a 'Mixture' column containing sample IDs.")
 
     counts_frame["Mixture"] = counts_frame["Mixture"].astype(str).str.strip()
     counts_frame = counts_frame.set_index("Mixture")
