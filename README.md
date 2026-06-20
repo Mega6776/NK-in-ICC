@@ -11,6 +11,22 @@ This repository contains supplemental resources for the research paper: Machine 
 **Authors:** Katelyn Deng, Austin Yu, Tony Zeng, and Ziliang Zong.
 ## Overview
 
+<table>
+<tr>
+<td align="center" width="50%">
+<img src="media/figs/suppressed_visual.png" width="100%"><br><br>
+<b>Suppressed NK Cell State in ICC</b><br>
+Tumor-associated immunosuppressive signaling is associated with reduced NK cytotoxic activity, diminished granule release, and gene expression patterns correlated with NK suppression.
+</td>
+
+<td align="center" width="50%">
+<img src="media/figs/activatednk_visual.png" width="100%"><br><br>
+<b>Activated NK Cell State in ICC</b><br>
+Enhanced receptor–ligand interactions are associated with increased cytotoxic granule release and interferon-gamma (IFN-γ) secretion, alongside gene expression patterns correlated with NK activation.
+</td>
+</tr>
+</table>
+
 In intrahepatic cholangiocarcinoma (ICC), a cancer of the liver's bile ducts, certain immune cells show up in large numbers but lose much of their ability to fight the tumor. But what exactly causes these cells to become dysfunctional? We investigated this question by applying machine learning across two transcriptomic datasets and pinpointing the genes most closely tied to whether natural killer (NK) cells stay active or go dormant. These genes offer a starting point for future work aimed at reactivating NK cells in a cancer that remains very difficult to treat.
 
 ## Abstract
