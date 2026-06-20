@@ -11,6 +11,8 @@ This repository contains supplemental resources for the research paper: Machine 
 **Authors:** Katelyn Deng, Austin Yu, Tony Zeng, and Ziliang Zong.
 ## Overview
 
+In intrahepatic cholangiocarcinoma (ICC), a cancer of the liver's bile ducts, certain immune cells show up in large numbers but lose much of their ability to fight the tumor. But what exactly causes these cells to become dysfunctional? We investigated this question by applying machine learning across two transcriptomic datasets and pinpointing the genes most closely tied to whether natural killer (NK) cells stay active or go dormant. These genes offer a starting point for future work aimed at reactivating NK cells in a cancer that remains very difficult to treat.
+
 <table>
 <tr>
 <td align="center" width="50%">
@@ -26,8 +28,6 @@ Enhanced receptor–ligand interactions are associated with increased cytotoxic 
 </td>
 </tr>
 </table>
-
-In intrahepatic cholangiocarcinoma (ICC), a cancer of the liver's bile ducts, certain immune cells show up in large numbers but lose much of their ability to fight the tumor. But what exactly causes these cells to become dysfunctional? We investigated this question by applying machine learning across two transcriptomic datasets and pinpointing the genes most closely tied to whether natural killer (NK) cells stay active or go dormant. These genes offer a starting point for future work aimed at reactivating NK cells in a cancer that remains very difficult to treat.
 
 ## Abstract
 
