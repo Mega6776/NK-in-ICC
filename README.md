@@ -29,7 +29,7 @@ Enhanced receptor–ligand interactions are associated with increased cytotoxic 
 </tr>
 </table>
 
-## Abstract
+## Introduction
 
 Intrahepatic cholangiocarcinoma (ICC) is a subtype of primary liver cancer that originates from the bile ducts in the liver, accounting for approximately 10% of all liver malignancies. Although less common than hepatocellular carcinoma (HCC), which accounts for 75–85% of primary liver cancer, ICC remains a significant clinical challenge due to its late diagnosis and aggressive progression. Currently, the only curative treatment option for patients is surgical resection; however, the prognosis is extremely poor, with a five-year survival rate of below 10%. The remaining treatment options are chemotherapy, radiation, and, most notably, emerging forms of immunotherapy.
 
