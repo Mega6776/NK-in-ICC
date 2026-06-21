@@ -157,7 +157,7 @@ Extra media (animations, images, diagrams) created to provide accessible visuali
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Citation
-
+<!-- 
 ```bibtex
 @inproceedings{deng2025nkcell,
   title  = {Machine Learning Based Identification of Key Regulators of NK Cell Dysfunction in Intrahepatic Cholangiocarcinoma},
@@ -166,3 +166,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   url    = {https://link-to-your-paper}
 }
 ```
+-->
