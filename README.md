@@ -156,6 +156,7 @@ Extra media (animations, images, diagrams) created to provide accessible visuali
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+<!-- 
 ## Citation
 
 ```bibtex
@@ -166,3 +167,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   url    = {https://link-to-your-paper}
 }
 ```
+-->
