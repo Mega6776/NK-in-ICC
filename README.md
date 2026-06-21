@@ -142,8 +142,16 @@ Extra media (animations, images, diagrams) created to provide accessible visuali
 - **Diagrams:** Diagrams of processes relevant to the research
 
 ## Dependencies
+numpy
+pandas
+matplotlib
+scikit-learn
+openpyxl
 
 ## Setup Instructions
+This project was built on Python Version 3.11.9  
+Install all dependencies directly
+- pip install numpy pandas matplotlib scikit-learn openpyxl
 
 ## Contacts
 
