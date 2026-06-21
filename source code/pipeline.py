@@ -27,9 +27,8 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-DATA_DIR = Path(r"") #------------------
-TRIAL_ID = 10
-RANDOM_SEED = 0
+# File locations and modeling settings used throughout the pipeline.
+DATA_DIR = Path(r"data/processed")
 OUTPUT_DIR = DATA_DIR / "cibersortDetails"
 EXPRESSION_FILE = "combined_gene_level.xlsx"
 CIBERSORT_FILE = "combined_cibersort_output.xlsx"
@@ -45,6 +44,7 @@ L1_RATIOS = np.linspace(0.1, 0.9, 9)
 REGULARIZATION_STRENGTHS = [0.01, 0.1, 1, 10]
 
 
+# Custom SelectKBest wrapper.
 class AdaptiveSelectKBest(BaseEstimator, TransformerMixin):
     def __init__(self, k=500, score_func=f_classif):
         self.k = k
@@ -65,6 +65,7 @@ class AdaptiveSelectKBest(BaseEstimator, TransformerMixin):
         return self.selector_.get_support(indices=indices)
 
 
+# Custom RFE wrapper.
 class AdaptiveRFE(BaseEstimator, TransformerMixin):
     def __init__(self, estimator=None, n_features_to_select=100, step=1):
         self.estimator = estimator
@@ -72,6 +73,7 @@ class AdaptiveRFE(BaseEstimator, TransformerMixin):
         self.step = step
 
     def fit(self, features, labels):
+        # RFE ranks genes by repeatedly fitting this base logistic-regression estimator.
         base_estimator = self.estimator or LogisticRegression(
             penalty="l2",
             solver="liblinear",
@@ -94,12 +96,13 @@ class AdaptiveRFE(BaseEstimator, TransformerMixin):
         return self.rfe_.get_support(indices=indices)
 
 
+# Create the output folder
 def configure_environment():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    np.random.seed(RANDOM_SEED)
     warnings.filterwarnings("ignore")
 
 
+# Match a required column name
 def resolve_column_name(columns, requested_name):
     if requested_name in columns:
         return requested_name
@@ -110,6 +113,7 @@ def resolve_column_name(columns, requested_name):
     return resolved_name
 
 
+# Load gene-expression data and transpose it into samples x genes format.
 def load_expression_matrix():
     expression_frame = pd.read_excel(DATA_DIR / EXPRESSION_FILE, index_col=0)
     sample_by_gene = expression_frame.T
@@ -117,6 +121,7 @@ def load_expression_matrix():
     return sample_by_gene
 
 
+# Load CIBERSORT NK-cell fractions and convert them into binary labels.
 def load_nk_labels():
     counts_frame = pd.read_excel(DATA_DIR / CIBERSORT_FILE, header=0)
     if "Mixture" not in counts_frame.columns:
@@ -130,11 +135,14 @@ def load_nk_labels():
 
     activated_values = pd.to_numeric(counts_frame[activated_column], errors="coerce")
     resting_values = pd.to_numeric(counts_frame[resting_column], errors="coerce")
+    # Positive difference means activated NK fraction is at least resting NK fraction.
     counts_frame["nk_difference"] = activated_values - resting_values
+    # Label 1 = activated NK >= resting NK; label 0 = activated NK < resting NK.
     counts_frame["nk_label"] = (counts_frame["nk_difference"] >= 0).astype(int)
     return counts_frame["nk_label"]
 
 
+# Keep only samples that appear in both the expression matrix and the NK-label table.
 def align_expression_and_labels(expression_matrix, labels):
     cleaned_sample_ids = pd.Index(expression_matrix.index.astype(str).str.strip())
     aligned_labels = labels.reindex(cleaned_sample_ids)
@@ -160,25 +168,31 @@ def align_expression_and_labels(expression_matrix, labels):
     return labeled_expression, labeled_labels
 
 
+# Split labeled samples into train and held-out test sets.
+# random_state=None
 def split_train_test(expression_matrix, labels):
     train_features, test_features, train_labels, test_labels = train_test_split(
         expression_matrix,
         labels,
         test_size=TEST_SIZE,
+        # Preserve approximately the same class balance in train and test sets.
         stratify=labels,
-        random_state=RANDOM_SEED,
+        random_state=None,
     )
     print(f"Train samples: {train_features.shape[0]}, Test samples: {test_features.shape[0]}")
     return train_features, test_features, train_labels, test_labels
 
 
+# Elastic-net logistic regression with inner cross-validation for C and l1_ratio.
 def make_logistic_cv():
     return LogisticRegressionCV(
+        # Elastic net combines L1-style sparsity with L2-style stability.
         penalty="elasticnet",
         solver="saga",
         l1_ratios=L1_RATIOS,
         Cs=REGULARIZATION_STRENGTHS,
         cv=INNER_FOLDS,
+        # Tune hyperparameters by ROC AUC instead of raw accuracy.
         scoring="roc_auc",
         max_iter=10000,
         n_jobs=-1,
@@ -186,6 +200,7 @@ def make_logistic_cv():
     )
 
 
+# PCA comparison pipeline: all genes -> scaling -> PCA -> elastic-net logistic regression.
 def make_pca_pipeline():
     return Pipeline(
         [
@@ -196,12 +211,15 @@ def make_pca_pipeline():
     )
 
 
+# Gene-selection pipeline: variance filter -> scaling -> ANOVA KBest -> RFE -> classifier.
 def make_gene_pipeline(variance_threshold):
     rfe_estimator = LogisticRegression(penalty="l2", solver="liblinear", max_iter=10000)
     return Pipeline(
         [
+            # Remove low-variance genes
             ("variance_filter", VarianceThreshold(threshold=variance_threshold)),
             ("scaler", StandardScaler()),
+            # Keep genes with the strongest ANOVA relationship to the labels.
             ("k_best", AdaptiveSelectKBest(k=K_BEST_FEATURES, score_func=f_classif)),
             (
                 "rfe",
@@ -216,13 +234,16 @@ def make_gene_pipeline(variance_threshold):
     )
 
 
+# Run outer cross-validation to estimate performance on unseen folds.
 def cross_validate_pipeline(pipeline, features, labels, pipeline_name):
-    outer_cv = StratifiedKFold(n_splits=OUTER_FOLDS, shuffle=True, random_state=RANDOM_SEED)
+    # random_state=None
+    outer_cv = StratifiedKFold(n_splits=OUTER_FOLDS, shuffle=True, random_state=None)
     print(f"\nPerforming cross-validation for {pipeline_name}...")
     auc_scores = cross_val_score(
         pipeline,
         features.values,
         labels,
+        # Tune hyperparameters by ROC AUC instead of raw accuracy.
         scoring="roc_auc",
         cv=outer_cv,
         n_jobs=-1,
@@ -267,6 +288,7 @@ def evaluate_classifier(labels, predictions, probabilities):
     return metrics
 
 
+# Print a readable metric block.
 def print_metrics(title, metrics):
     print(f"\n{title}")
     print("-" * len(title))
@@ -278,6 +300,7 @@ def print_metrics(title, metrics):
 
 
 def plot_variance_histograms(train_features, variance_threshold):
+    # Calculate the variance threshold from training data
     gene_variances = train_features.astype(float).var(axis=0, ddof=1)
 
     plt.figure(figsize=(8, 4))
@@ -293,7 +316,7 @@ def plot_variance_histograms(train_features, variance_threshold):
     plt.title("Per-gene variance (raw training)")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(OUTPUT_DIR / f"variance_raw_hist_trial{TRIAL_ID}.png", dpi=300)
+    plt.savefig(OUTPUT_DIR / f"variance_raw_hist_trial.png", dpi=300)
     plt.close()
 
     variance_filter = VarianceThreshold(threshold=variance_threshold).fit(train_features.values)
@@ -302,7 +325,7 @@ def plot_variance_histograms(train_features, variance_threshold):
     plt.hist(gene_variances[variance_filter.get_support()], bins=60)
     plt.title("Per-gene variance (survivors after VT)")
     plt.tight_layout()
-    plt.savefig(OUTPUT_DIR / f"variance_after_vt_hist_trial{TRIAL_ID}.png", dpi=300)
+    plt.savefig(OUTPUT_DIR / f"variance_after_vt_hist_trial.png", dpi=300)
     plt.close()
 
 
@@ -315,6 +338,7 @@ def make_report_writer(report_path):
     return write_line
 
 
+# Recover the gene names that survive each feature-selection step.
 def get_selected_gene_sets(gene_pipeline, gene_names):
     variance_mask = gene_pipeline.named_steps["variance_filter"].get_support()
     genes_after_variance = gene_names[variance_mask]
@@ -330,10 +354,11 @@ def get_selected_gene_sets(gene_pipeline, gene_names):
     return genes_after_variance, genes_after_k_best, genes_after_rfe
 
 
+# Write a report describing the fitted feature-selection pipeline.
 def write_feature_selection_report(gene_pipeline, train_features):
-    report_path = OUTPUT_DIR / f"rfe_report_trial{TRIAL_ID}.txt"
+    report_path = OUTPUT_DIR / f"rfe_report_trial.txt"
     with open(report_path, "w", encoding="utf-8") as report_file:
-        report_file.write(f"RFE / feature-selection report - trial {TRIAL_ID}\n")
+        report_file.write(f"RFE / feature-selection report - trial \n")
         report_file.write("Generated: " + time.asctime() + "\n\n")
 
     write_line = make_report_writer(report_path)
@@ -368,6 +393,7 @@ def write_feature_selection_report(gene_pipeline, train_features):
     return report_path
 
 
+# Save ANOVA F-scores and p-values for genes after variance filtering.
 def write_anova_report(gene_pipeline, genes_after_variance, write_line):
     k_best_step = gene_pipeline.named_steps["k_best"]
     selector = getattr(k_best_step, "selector_", None)
@@ -393,12 +419,13 @@ def write_anova_report(gene_pipeline, genes_after_variance, write_line):
         }
     ).sort_values("F_value", ascending=False)
 
-    anova_path = OUTPUT_DIR / f"rfe_anova_details_trial{TRIAL_ID}.csv"
+    anova_path = OUTPUT_DIR / f"rfe_anova_details_trial.csv"
     anova_results.to_csv(anova_path, index=False)
     write_line(f"Saved ANOVA results to: {anova_path}")
     write_line("Top 10 ANOVA genes: " + ", ".join(anova_results["GENE"].head(10).tolist()))
 
 
+# Save RFE rankings for inspection later.
 def write_rfe_report(gene_pipeline, genes_after_k_best, write_line):
     rfe_step = gene_pipeline.named_steps["rfe"]
     fitted_rfe = getattr(rfe_step, "rfe_", None)
@@ -429,13 +456,14 @@ def write_rfe_report(gene_pipeline, genes_after_k_best, write_line):
         }
     ).sort_values("RFE_rank", ascending=True)
 
-    rfe_path = OUTPUT_DIR / f"rfe_ranking_trial{TRIAL_ID}.csv"
+    rfe_path = OUTPUT_DIR / f"rfe_ranking_trial.csv"
     rfe_results.to_csv(rfe_path, index=False)
     selected_genes = rfe_results.loc[rfe_results["RFE_rank"] == 1, "GENE"].head(10).tolist()
     write_line(f"Wrote RFE ranking and selection mask to: {rfe_path}")
     write_line("Top 10 RFE-selected genes: " + ", ".join(selected_genes))
 
 
+# Save final logistic-regression coefficients for the RFE-selected genes.
 def write_final_coefficient_report(gene_pipeline, genes_after_rfe, write_line):
     classifier = gene_pipeline.named_steps["classifier"]
     write_line("\n--- Final classifier ---")
@@ -461,12 +489,13 @@ def write_final_coefficient_report(gene_pipeline, genes_after_rfe, write_line):
     coefficient_results["ABS_COEF"] = coefficient_results["COEFFICIENT"].abs()
     coefficient_results = coefficient_results.sort_values("ABS_COEF", ascending=False)
 
-    coefficient_path = OUTPUT_DIR / f"rfe_final_coeffs_trial{TRIAL_ID}.csv"
+    coefficient_path = OUTPUT_DIR / f"rfe_final_coeffs_trial.csv"
     coefficient_results.to_csv(coefficient_path, index=False)
     write_line(f"Saved final coefficients for selected genes to: {coefficient_path}")
     write_line("Top 10 genes by |coefficient|: " + ", ".join(coefficient_results["GENE"].head(10).tolist()))
 
 
+# Save model and feature-selection settings needed to reproduce the run.
 def write_reproducibility_json(gene_pipeline, genes_after_k_best):
     rfe_step = gene_pipeline.named_steps["rfe"]
     fitted_rfe = getattr(rfe_step, "rfe_", None)
@@ -488,11 +517,12 @@ def write_reproducibility_json(gene_pipeline, genes_after_k_best):
         "VarianceThreshold": {"threshold": variance_filter.threshold},
     }
 
-    output_path = OUTPUT_DIR / f"rfe_repro_snippet_trial{TRIAL_ID}.json"
+    output_path = OUTPUT_DIR / f"rfe_repro_snippet_trial.json"
     with open(output_path, "w", encoding="utf-8") as output_file:
         json.dump(reproducibility_data, output_file, indent=2, default=str)
 
 
+# Rebuild final scaled train/test dataframes using the fitted gene-selection pipeline.
 def make_final_scaled_dataframes(gene_pipeline, train_features, test_features):
     gene_names = train_features.columns.to_numpy()
     genes_after_variance, _, genes_after_rfe = get_selected_gene_sets(gene_pipeline, gene_names)
@@ -502,6 +532,7 @@ def make_final_scaled_dataframes(gene_pipeline, train_features, test_features):
     if len(genes_after_rfe) == 0:
         raise RuntimeError("RFE selected zero genes. Check RFE settings.")
 
+    # Apply the fitted pipeline's selected gene names to the original dataframes.
     train_after_variance = train_features.loc[:, genes_after_variance].values.astype(float)
     test_after_variance = test_features.loc[:, genes_after_variance].values.astype(float)
 
@@ -528,6 +559,7 @@ def make_final_scaled_dataframes(gene_pipeline, train_features, test_features):
     return final_scaled_train, final_scaled_test, genes_after_rfe
 
 
+# Export selected genes ordered by absolute classifier coefficient size.
 def save_final_gene_coefficients(classifier, selected_genes):
     coefficients = pd.Series(classifier.coef_[0], index=selected_genes)
     sorted_genes = coefficients.abs().sort_values(ascending=False).index
@@ -537,56 +569,41 @@ def save_final_gene_coefficients(classifier, selected_genes):
             "COEFFICIENT": coefficients.loc[sorted_genes].values,
         }
     )
-    output_path = OUTPUT_DIR / f"paper{TRIAL_ID}.xlsx"
+    output_path = OUTPUT_DIR / f"paper.xlsx"
     coefficient_frame.to_excel(output_path, index=False)
     print(f"\nSaved gene coefficients to: {output_path}")
     return coefficient_frame, output_path
 
 
-def save_summary_metrics(pca_metrics, gene_metrics, pca_auc_scores, gene_auc_scores, pca_accuracy_scores, gene_accuracy_scores, test_labels):
+# Save a one-row CSV containing only PCA model performance metrics.
+def save_pca_summary_metrics(pca_metrics, pca_auc_scores, pca_accuracy_scores, test_labels):
     summary = pd.DataFrame(
         {
-            "method": ["PCA_model", "Gene_model"],
-            "accuracy": [pca_metrics.get("accuracy", np.nan), gene_metrics.get("accuracy", np.nan)],
-            "balanced_accuracy": [
-                pca_metrics.get("balanced_accuracy", np.nan),
-                gene_metrics.get("balanced_accuracy", np.nan),
-            ],
-            "precision": [pca_metrics.get("precision", np.nan), gene_metrics.get("precision", np.nan)],
-            "recall": [pca_metrics.get("recall", np.nan), gene_metrics.get("recall", np.nan)],
-            "f1": [pca_metrics.get("f1", np.nan), gene_metrics.get("f1", np.nan)],
-            "roc_auc": [pca_metrics.get("roc_auc", np.nan), gene_metrics.get("roc_auc", np.nan)],
-            "avg_precision": [
-                pca_metrics.get("avg_precision", np.nan),
-                gene_metrics.get("avg_precision", np.nan),
-            ],
-            "cohen_kappa": [
-                pca_metrics.get("cohen_kappa", np.nan),
-                gene_metrics.get("cohen_kappa", np.nan),
-            ],
-            "cv_auc_mean": [np.mean(pca_auc_scores), np.mean(gene_auc_scores)],
-            "cv_auc_std": [np.std(pca_auc_scores), np.std(gene_auc_scores)],
-            "cv_acc_mean": [np.mean(pca_accuracy_scores), np.mean(gene_accuracy_scores)],
-            "cv_acc_std": [np.std(pca_accuracy_scores), np.std(gene_accuracy_scores)],
-            "test_samples": [len(test_labels), len(test_labels)],
+            "method": ["PCA_model"],
+            "accuracy": [pca_metrics.get("accuracy", np.nan)],
+            "balanced_accuracy": [pca_metrics.get("balanced_accuracy", np.nan)],
+            "precision": [pca_metrics.get("precision", np.nan)],
+            "recall": [pca_metrics.get("recall", np.nan)],
+            "f1": [pca_metrics.get("f1", np.nan)],
+            "roc_auc": [pca_metrics.get("roc_auc", np.nan)],
+            "avg_precision": [pca_metrics.get("avg_precision", np.nan)],
+            "cohen_kappa": [pca_metrics.get("cohen_kappa", np.nan)],
+            "cv_auc_mean": [np.mean(pca_auc_scores)],
+            "cv_auc_std": [np.std(pca_auc_scores)],
+            "cv_acc_mean": [np.mean(pca_accuracy_scores)],
+            "cv_acc_std": [np.std(pca_accuracy_scores)],
+            "test_samples": [len(test_labels)],
         }
     )
-    output_path = OUTPUT_DIR / f"analysis_scores_summary_{TRIAL_ID}.csv"
+    output_path = OUTPUT_DIR / f"pca_analysis_scores_summary_.csv"
     summary.to_csv(output_path, index=False)
-    print(f"\nSaved summary metrics to {output_path}")
+    print(f"\nSaved PCA-only summary metrics to {output_path}")
     return summary, output_path
 
 
-def save_detailed_metrics(
-    pca_metrics,
-    gene_metrics,
-    pca_auc_scores,
-    gene_auc_scores,
-    pca_accuracy_scores,
-    gene_accuracy_scores,
-    final_gene_coefficients,
-):
-    output_path = OUTPUT_DIR / f"analysis_scores_details_{TRIAL_ID}.txt"
+# Save a text report containing PCA test metrics and PCA cross-validation scores.
+def save_pca_detailed_metrics(pca_metrics, pca_auc_scores, pca_accuracy_scores):
+    output_path = OUTPUT_DIR / f"pca_analysis_scores_details_.txt"
     with open(output_path, "w", encoding="utf-8") as detail_file:
         detail_file.write("PCA model metrics\n")
         detail_file.write("-----------------\n")
@@ -594,33 +611,28 @@ def save_detailed_metrics(
             detail_file.write(f"{metric_name}:\n{metric_value}\n\n")
         detail_file.write("\nPCA CV ROC AUC scores:\n")
         detail_file.write(np.array2string(pca_auc_scores, precision=3) + "\n")
-        detail_file.write(np.array2string(pca_accuracy_scores, precision=3) + "\n\n")
-        detail_file.write("Gene-space model metrics\n")
-        detail_file.write("------------------------\n")
-        for metric_name, metric_value in gene_metrics.items():
-            detail_file.write(f"{metric_name}:\n{metric_value}\n\n")
-        detail_file.write("\nGene CV ROC AUC scores:\n")
-        detail_file.write(np.array2string(gene_auc_scores, precision=3) + "\n")
-        detail_file.write(np.array2string(gene_accuracy_scores, precision=3) + "\n\n")
-        detail_file.write("Top impactful genes:\n")
-        detail_file.write(final_gene_coefficients.head(30).to_string(index=False))
-    print(f"Saved detailed metrics to {output_path}")
+        detail_file.write("\nPCA CV accuracy scores:\n")
+        detail_file.write(np.array2string(pca_accuracy_scores, precision=3) + "\n")
+    print(f"Saved PCA-only detailed metrics to {output_path}")
     return output_path
 
 
+# Extract selected elastic-net hyperparameters from a fitted LogisticRegressionCV model.
 def extract_logistic_cv_info(classifier):
     selected_c = None
     selected_l1_ratio = None
 
     c_values = getattr(classifier, "C_", None)
     if c_values is not None:
-        selected_c = float(c_values[0]) if hasattr(c_values, "__len__") else float(c_values)
+        c_array = np.asarray(c_values).ravel()
+        if c_array.size > 0:
+            selected_c = float(c_array[0])
 
-    l1_ratio = getattr(classifier, "l1_ratio_", None)
-    if l1_ratio is None:
-        l1_ratio = getattr(classifier, "l1_ratio", None)
-    if l1_ratio is not None:
-        selected_l1_ratio = float(l1_ratio)
+    l1_ratio_values = getattr(classifier, "l1_ratio_", None)
+    if l1_ratio_values is not None:
+        l1_ratio_array = np.asarray(l1_ratio_values).ravel()
+        if l1_ratio_array.size > 0:
+            selected_l1_ratio = float(l1_ratio_array[0])
 
     return {
         "C_selected": selected_c,
@@ -629,6 +641,7 @@ def extract_logistic_cv_info(classifier):
     }
 
 
+# Evaluate one manually fitted outer fold using that fold's selected genes.
 def evaluate_outer_fold_pipeline(pipeline, validation_features, validation_labels, genes_after_variance, genes_after_rfe):
     if len(genes_after_rfe) == 0:
         return np.nan, np.nan
@@ -652,7 +665,8 @@ def evaluate_outer_fold_pipeline(pipeline, validation_features, validation_label
 
 def run_manual_outer_cv(gene_pipeline, train_features, train_labels):
     print("\nRunning manual outer-CV loop to capture per-fold hyperparameters and coefficients...")
-    outer_cv = StratifiedKFold(n_splits=OUTER_FOLDS, shuffle=True, random_state=RANDOM_SEED)
+    # random_state=None
+    outer_cv = StratifiedKFold(n_splits=OUTER_FOLDS, shuffle=True, random_state=None)
     gene_names = train_features.columns.to_numpy()
     fold_reports = []
     coefficient_frames = []
@@ -681,6 +695,7 @@ def run_manual_outer_cv(gene_pipeline, train_features, train_labels):
             index=train_features.index[fold_validation_index],
         )
 
+        # Clone the pipeline so each fold is fit independently.
         fitted_pipeline = clone(gene_pipeline)
         fitted_pipeline.fit(fold_train_features.values, fold_train_labels)
 
@@ -722,11 +737,11 @@ def run_manual_outer_cv(gene_pipeline, train_features, train_labels):
         if not coefficient_series.empty:
             coefficient_frame = coefficient_series.rename(f"fold{fold_index}").to_frame()
             coefficient_frames.append(coefficient_frame)
-            fold_coefficient_path = OUTPUT_DIR / f"elasticnet_fold{fold_index}_coefs_trial{TRIAL_ID}.csv"
+            fold_coefficient_path = OUTPUT_DIR / f"elasticnet_fold{fold_index}_coefs_trial.csv"
             coefficient_frame.to_csv(fold_coefficient_path)
 
     fold_report_frame = pd.DataFrame(fold_reports)
-    fold_report_path = OUTPUT_DIR / f"elasticnet_outer_cv_fold_reports_trial{TRIAL_ID}.csv"
+    fold_report_path = OUTPUT_DIR / f"elasticnet_outer_cv_fold_reports_trial.csv"
     fold_report_frame.to_csv(fold_report_path, index=False)
     print(f"Wrote outer-fold CV report to: {fold_report_path}")
 
@@ -735,16 +750,18 @@ def run_manual_outer_cv(gene_pipeline, train_features, train_labels):
     return fold_report_frame, merged_coefficients
 
 
+# Combine fold coefficient files and summarize how often each gene is selected.
 def save_outer_cv_coefficient_summary(coefficient_frames):
     if not coefficient_frames:
         print("No coefficients collected across folds.")
         return pd.DataFrame()
 
     merged_coefficients = pd.concat(coefficient_frames, axis=1).fillna(0.0)
-    coefficient_matrix_path = OUTPUT_DIR / f"elasticnet_coef_matrix_outerfolds_trial{TRIAL_ID}.csv"
+    coefficient_matrix_path = OUTPUT_DIR / f"elasticnet_coef_matrix_outerfolds_trial.csv"
     merged_coefficients.to_csv(coefficient_matrix_path)
     print("Saved coefficient matrix.")
 
+    # Nonzero coefficient in a fold means the gene contributed to that fold's final classifier.
     selection_frequency = (merged_coefficients != 0).sum(axis=1) / merged_coefficients.shape[1]
     mean_coefficient_if_selected = merged_coefficients.replace(0.0, np.nan).mean(axis=1).fillna(0.0)
     selection_summary = pd.DataFrame(
@@ -756,7 +773,7 @@ def save_outer_cv_coefficient_summary(coefficient_frames):
         }
     ).sort_values("selection_freq", ascending=False)
 
-    summary_path = OUTPUT_DIR / f"elasticnet_selection_summary_trial{TRIAL_ID}.csv"
+    summary_path = OUTPUT_DIR / f"elasticnet_selection_summary_trial.csv"
     selection_summary.to_csv(summary_path, index=False)
     print("Saved selection frequency summary.")
 
@@ -767,13 +784,14 @@ def save_outer_cv_coefficient_summary(coefficient_frames):
     axis.set_xlabel("Selection frequency (outer folds)")
     axis.set_title("Elastic-net: selection frequency of top genes (outer folds)")
     plt.tight_layout()
-    plot_path = OUTPUT_DIR / f"elasticnet_selection_freq_top{top_gene_count}_trial{TRIAL_ID}.png"
+    plot_path = OUTPUT_DIR / f"elasticnet_selection_freq_top{top_gene_count}_trial.png"
     plt.savefig(plot_path, dpi=300)
     plt.close()
     print(f"Saved selection frequency plot: {plot_path}")
     return merged_coefficients
 
 
+# Save outer-CV and feature-selection settings for reproducibility.
 def save_outer_cv_reproducibility_json(gene_pipeline, outer_cv):
     reproducibility_data = {
         "outer_cv_n_splits": outer_cv.get_n_splits(),
@@ -781,12 +799,13 @@ def save_outer_cv_reproducibility_json(gene_pipeline, outer_cv):
         "RFE_params": gene_pipeline.named_steps["rfe"].get_params(),
         "SelectKBest_params": getattr(gene_pipeline.named_steps["k_best"], "__dict__", {}),
     }
-    output_path = OUTPUT_DIR / f"elasticnet_repro_snippet_trial{TRIAL_ID}.json"
+    output_path = OUTPUT_DIR / f"elasticnet_repro_snippet_trial.json"
     with open(output_path, "w", encoding="utf-8") as output_file:
         json.dump(reproducibility_data, output_file, indent=2, default=str)
     print("Saved reproducibility snippet.")
 
 
+# Save ROC and precision-recall curves from class-1 predicted probabilities.
 def plot_roc_and_precision_recall(labels, probabilities, filename_prefix):
     false_positive_rate, true_positive_rate, _ = roc_curve(labels, probabilities)
     roc_auc = auc(false_positive_rate, true_positive_rate)
@@ -799,7 +818,7 @@ def plot_roc_and_precision_recall(labels, probabilities, filename_prefix):
     plt.title("ROC Curve")
     plt.legend()
     plt.tight_layout()
-    roc_path = OUTPUT_DIR / f"{filename_prefix}_roc_trial{TRIAL_ID}.png"
+    roc_path = OUTPUT_DIR / f"{filename_prefix}_roc_trial.png"
     plt.savefig(roc_path, dpi=300)
     plt.close()
 
@@ -813,13 +832,14 @@ def plot_roc_and_precision_recall(labels, probabilities, filename_prefix):
     plt.title("Precision-Recall Curve")
     plt.legend()
     plt.tight_layout()
-    precision_recall_path = OUTPUT_DIR / f"{filename_prefix}_pr_trial{TRIAL_ID}.png"
+    precision_recall_path = OUTPUT_DIR / f"{filename_prefix}_pr_trial.png"
     plt.savefig(precision_recall_path, dpi=300)
     plt.close()
 
     return roc_path, precision_recall_path
 
 
+# Main pipeline
 def main():
     configure_environment()
 
@@ -843,11 +863,13 @@ def main():
     pca_metrics = evaluate_classifier(test_labels, pca_predictions, pca_probabilities)
     print_metrics("PCA-model evaluation on test set", pca_metrics)
 
+    # Calculate the variance threshold from training data
     gene_variances = train_features.astype(float).var(axis=0, ddof=1)
     variance_threshold = np.percentile(gene_variances, VARIANCE_PERCENTILE)
     print(f"\nVariance threshold ({VARIANCE_PERCENTILE}th percentile) = {variance_threshold:.6g}")
     plot_variance_histograms(train_features, variance_threshold)
 
+    # Fit the interpretable gene-selection pipeline after evaluating the PCA baseline.
     gene_pipeline = make_gene_pipeline(variance_threshold)
     gene_auc_scores, gene_accuracy_scores = cross_validate_pipeline(
         gene_pipeline,
@@ -870,38 +892,32 @@ def main():
     gene_predictions = gene_classifier.predict(final_scaled_test.values)
     gene_probabilities = gene_classifier.predict_proba(final_scaled_test.values)[:, 1]
     gene_metrics = evaluate_classifier(test_labels, gene_predictions, gene_probabilities)
-    print_metrics("Gene-space model evaluation on test set", gene_metrics)
 
     final_gene_coefficients, _ = save_final_gene_coefficients(gene_classifier, selected_genes)
-    save_summary_metrics(
+
+    #PCA metrics are saved in these final metric-output files.
+    save_pca_summary_metrics(
         pca_metrics,
-        gene_metrics,
         pca_auc_scores,
-        gene_auc_scores,
         pca_accuracy_scores,
-        gene_accuracy_scores,
         test_labels,
     )
-    save_detailed_metrics(
+    save_pca_detailed_metrics(
         pca_metrics,
-        gene_metrics,
         pca_auc_scores,
-        gene_auc_scores,
         pca_accuracy_scores,
-        gene_accuracy_scores,
-        final_gene_coefficients,
     )
 
     run_manual_outer_cv(gene_pipeline, train_features, train_labels)
 
     roc_path, precision_recall_path = plot_roc_and_precision_recall(
         test_labels,
-        gene_probabilities,
-        filename_prefix="gene_model",
+        pca_probabilities,
+        filename_prefix="pca_model",
     )
     print(f"Saved ROC: {roc_path}")
     print(f"Saved PR: {precision_recall_path}")
-    print("\nAll done. Pipelines trained, cross-validation performed, reports exported, and metrics saved.")
+    print("\nAll done. Pipelines trained, reports exported, and PCA-only metrics saved.")
     print(f"Output directory: {OUTPUT_DIR}")
 
 
