@@ -133,9 +133,7 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 
 * Computed an NK activation metric for each sample:
 
-  [
-  M_i = \text{NK Activated}_i - \text{NK Resting}_i
-  ]
+  $M_i = \text{NK Activated}_i - \text{NK Resting}_i$
 
 * Applied a **Bayesian Gaussian Mixture Model (BGMM)** to the (M_i) values.
 
