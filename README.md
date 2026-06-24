@@ -118,6 +118,58 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 </tr>
 </table>
 
+## Methodology
+
+### Data Preprocessing
+
+* **GSE107943:** Applied log₂ transformation and removed low-expression genes.
+* **GSE32225:** Mapped probe IDs to gene symbols and applied the Foltz et al. cross-platform normalization procedure.
+
+### NK Cell Deconvolution
+
+* **CIBERSORTx:** Estimated resting and activated NK-cell abundances from the combined ICC transcriptomic datasets.
+
+### NK Functional-State Labeling
+
+* Computed an NK activation metric for each sample:
+
+  [
+  M_i = \text{NK Activated}_i - \text{NK Resting}_i
+  ]
+
+* Applied a **Bayesian Gaussian Mixture Model (BGMM)** to the (M_i) values.
+
+* Assigned samples to **NK-High** and **NK-Low** functional-state groups.
+
+### Feature Scaling
+
+* Performed an **80/20 train-test split**.
+* Applied **gene-wise Z-score standardization** using statistics computed from the training set.
+
+### Four-Stage Feature Reduction
+
+1. **Variance Thresholding**
+
+   * Removed near-constant gene-expression features.
+
+2. **ANOVA F-Test**
+
+   * Retained the top 1,000 genes showing the greatest differences between NK-High and NK-Low samples.
+
+3. **Recursive Feature Elimination (RFE)**
+
+   * Iteratively removed less informative predictors.
+
+4. **Elastic Net Logistic Regression**
+
+   * Selected the most predictive features and generated the final ranked gene set.
+
+### Cross-Validation and Consensus Selection
+
+* Repeated model training across multiple resampled train-test splits.
+* Ranked genes according to selection frequency and coefficient magnitude.
+* Retained genes that were consistently selected across trials for downstream biological analysis.
+
 ## Data
 
 Transcriptomic datasets were obtained from the [Gene Expression Omnibus (GEO)](https://www.ncbi.nlm.nih.gov/geo/):
