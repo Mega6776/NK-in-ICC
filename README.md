@@ -118,8 +118,6 @@ In this study, we analyzed two ICC transcriptomic datasets from the Gene Express
 </tr>
 </table>
 
-## Methodology
-
 ## Data
 
 Transcriptomic datasets were obtained from the [Gene Expression Omnibus (GEO)](https://www.ncbi.nlm.nih.gov/geo/):
