@@ -178,16 +178,18 @@ Transcriptomic datasets were obtained from the [Gene Expression Omnibus (GEO)](h
 
 ## Repository Contents
 
-### Machine Learning
-Relevant sources used or implemented during the machine learning process.
-- **Code:** Contains implementations of algorithms and other relevant source code
-- **Datasets:** Contain datasets used to train the machine learning model
+### data
+Relevant datasets used during the machine learning process.
+- **raw:** Original transcriptomic datasets downloaded from the NCBI Gene Expression Omnibus (GEO).
+- **processed:** Preprocessed and normalized gene-expression matrices used in downstream machine-learning analyses.
 
-### Media
+### media
 Extra media (animations, images, diagrams) created to provide accessible visualizations for processes detailed in the research paper.
-- **Animations:** Animations of underlying biological processes relevant to the research
-- **Images:** Images related to the findings of the research
-- **Diagrams:** Diagrams of processes relevant to the research
+- **animations:** Animations of underlying biological processes relevant to the research
+- **figs:** Graphs and diagrams related to the findings of the research
+
+### src
+Source code used for data preprocessing, immune deconvolution, machine learning, and downstream analysis.
 
 ## Dependencies
 numpy
